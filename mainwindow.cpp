@@ -17,16 +17,11 @@ MainWindow::MainWindow(QWidget *parent) :
     filename="";
     move((QApplication::desktop()->width()-width())/2, (QApplication::desktop()->height()-height())/2);
     GS = new QGraphicsScene;
-//    QString element = "<?xml version='1.0' ?><svg width='128' height='128' version='1.1' xmlns='http://www.w3.org/2000/svg'>";
-//    element += "<polygon points='10,0 10,128 118,128 118,20 98,0' style='fill:#2C53B8'/>";
-//    element += "</svg>";
-//    QXmlStreamReader *XMLSR = new QXmlStreamReader(element);
-//    QSvgRenderer *SVGR = new QSvgRenderer(XMLSR);
-//    QGraphicsSvgItem *GSVGI = new QGraphicsSvgItem;
-//    GSVGI->setSharedRenderer(SVGR);
-//    GS->addItem(GSVGI);
     ui->graphicsView->setScene(GS);
+    SVGW = new QSvgWidget;
+    ui->verticalLayout_SVG->addWidget(SVGW);
     connect(ui->listWidget,SIGNAL(itemClicked(QListWidgetItem*)),this,SLOT(drawItem(QListWidgetItem*)));
+    connect(ui->lineEdit,SIGNAL(returnPressed()),this,SLOT(on_pushButtonModify_clicked()));
 }
 
 MainWindow::~MainWindow()
@@ -58,10 +53,14 @@ void MainWindow::on_action_open_triggered()
             QString s = TS.readAll();
             file->close();
             ui->statusBar->showMessage("打开 " + filename);
-            QStringList line = s.split("\n");
+            lines = s.split("\n");
             //for(int i=0;i<line.size();i++){
+            tagxml = lines.filter("<?xml").at(0);
+            qDebug() << tagxml;
+            tagsvg = lines.filter("<svg").at(0);
+            qDebug() << tagsvg;
             ui->listWidget->clear();
-            ui->listWidget->addItems(line);
+            ui->listWidget->addItems(lines);
             //}
         }else{
             ui->statusBar->showMessage("打开 " + filename + file->errorString());
@@ -71,15 +70,40 @@ void MainWindow::on_action_open_triggered()
 
 void MainWindow::drawItem(QListWidgetItem *item)
 {
-    //qDebug() << item->text();
-    QString element = "<?xml version='1.0' ?><svg width='128' height='128' version='1.1' xmlns='http://www.w3.org/2000/svg'>";
+    ui->lineEdit->setText(item->text());
+    //QString element = "<?xml version='1.0' ?><svg width='128' height='128' version='1.1' xmlns='http://www.w3.org/2000/svg'>";
+    QString element = tagxml + tagsvg;
     element += item->text();
     element += "</svg>";
+    qDebug() << element;
     GS->clear();
     QXmlStreamReader *XMLSR = new QXmlStreamReader(element);
     QSvgRenderer *SVGR = new QSvgRenderer(XMLSR);
     QGraphicsSvgItem *GSVGI = new QGraphicsSvgItem;
     GSVGI->setSharedRenderer(SVGR);
     GS->addItem(GSVGI);
-    //ui->graphicsView->setScene(GS);
+}
+
+void MainWindow::on_pushButtonModify_clicked()
+{
+    ui->listWidget->currentItem()->setText(ui->lineEdit->text());
+    drawItem(ui->listWidget->item(ui->listWidget->currentRow()));
+    preview();
+}
+
+void MainWindow::on_pushButtonDelete_clicked()
+{
+    QListWidgetItem *item = ui->listWidget->takeItem(ui->listWidget->currentRow());
+    delete item;
+    preview();
+}
+
+void MainWindow::preview()
+{
+    QString s="";
+    for(int i=0;i<ui->listWidget->count();i++){
+        s += ui->listWidget->item(i)->text() + "\n";
+    }
+    qDebug() << s.toLatin1();
+    SVGW->load(s.toLatin1());
 }
