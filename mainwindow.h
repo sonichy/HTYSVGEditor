@@ -26,7 +26,11 @@ private:
     QSvgWidget *SVGW;
 
 private slots:
+    void on_action_new_triggered();
     void on_action_open_triggered();
+    void on_action_save_triggered();
+    void on_action_saveas_triggered();
+    void on_action_close_triggered();
     void on_action_quit_triggered();
     void on_action_about_triggered();
     void on_pushButtonModify_clicked();
