@@ -25,6 +25,13 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->action_saveas->setIcon(icon);
     icon = style->standardIcon(QStyle::SP_DialogCloseButton);
     ui->action_quit->setIcon(icon);
+    icon = style->standardIcon(QStyle::SP_BrowserReload);
+    ui->actionReload->setIcon(icon);
+    icon = style->standardIcon(QStyle::SP_ArrowUp);
+    ui->pushButtonMoveUp->setIcon(icon);
+    icon = style->standardIcon(QStyle::SP_ArrowDown);
+    ui->pushButtonMoveDown->setIcon(icon);
+
     filename="";
     move((QApplication::desktop()->width()-width())/2, (QApplication::desktop()->height()-height())/2);
     GS = new QGraphicsScene;
@@ -33,7 +40,7 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->verticalLayout_SVG->addWidget(SVGW);
     ui->verticalLayout_SVG->addStretch();
     connect(ui->listWidget,SIGNAL(itemClicked(QListWidgetItem*)),this,SLOT(drawItem(QListWidgetItem*)));
-    connect(ui->lineEdit,SIGNAL(returnPressed()),this,SLOT(on_pushButtonModify_clicked()));
+    connect(ui->lineEdit,SIGNAL(returnPressed()),this,SLOT(on_pushButtonModify_clicked()));    
 }
 
 MainWindow::~MainWindow()
@@ -57,27 +64,7 @@ void MainWindow::on_action_about_triggered()
 void MainWindow::on_action_open_triggered()
 {
     filename = QFileDialog::getOpenFileName(this,"打开",filename,"SVG(*.svg)");
-    if(!filename.isEmpty()){
-        ui->label->setPixmap(QPixmap(filename));
-        QFile *file = new QFile(filename);
-        if(file->open(QIODevice::ReadOnly)){
-            QTextStream TS(file);
-            QString s = TS.readAll();
-            file->close();
-            ui->statusBar->showMessage("打开 " + filename);
-            lines = s.split("\n");
-            //for(int i=0;i<line.size();i++){
-            tagxml = lines.filter("<?xml").at(0);
-            qDebug() << tagxml;
-            tagsvg = lines.filter("<svg").at(0);
-            qDebug() << tagsvg;
-            ui->listWidget->clear();
-            ui->listWidget->addItems(lines);
-            //}
-        }else{
-            ui->statusBar->showMessage("打开 " + filename + file->errorString());
-        }
-    }
+    on_actionReload_triggered();
 }
 
 void MainWindow::drawItem(QListWidgetItem *item)
@@ -86,7 +73,7 @@ void MainWindow::drawItem(QListWidgetItem *item)
     QString element = tagxml + tagsvg;
     element += item->text();
     element += "</svg>";
-    qDebug() << element;
+    //qDebug() << element;
     GS->clear();
     QXmlStreamReader *XMLSR = new QXmlStreamReader(element);
     QSvgRenderer *SVGR = new QSvgRenderer(XMLSR);
@@ -95,18 +82,52 @@ void MainWindow::drawItem(QListWidgetItem *item)
     GS->addItem(GSVGI);
 }
 
+void MainWindow::on_pushButtonMoveUp_clicked()
+{
+    if(ui->listWidget->currentRow()>1){
+        QString s = ui->listWidget->item(ui->listWidget->currentRow()-1)->text();
+        ui->listWidget->item(ui->listWidget->currentRow()-1)->setText(ui->listWidget->currentItem()->text());
+        ui->listWidget->currentItem()->setText(s);
+        ui->listWidget->setCurrentRow(ui->listWidget->currentRow()-1);
+        preview();
+    }
+}
+
+void MainWindow::on_pushButtonMoveDown_clicked()
+{
+    if(ui->listWidget->currentRow()<ui->listWidget->count()-2){
+        QString s = ui->listWidget->item(ui->listWidget->currentRow()+1)->text();
+        ui->listWidget->item(ui->listWidget->currentRow()+1)->setText(ui->listWidget->currentItem()->text());
+        ui->listWidget->currentItem()->setText(s);
+        ui->listWidget->setCurrentRow(ui->listWidget->currentRow()+1);
+        preview();
+    }
+}
+
 void MainWindow::on_pushButtonModify_clicked()
 {
-    ui->listWidget->currentItem()->setText(ui->lineEdit->text());
-    drawItem(ui->listWidget->item(ui->listWidget->currentRow()));
-    preview();
+    if(ui->listWidget->count()>0){
+        ui->listWidget->currentItem()->setText(ui->lineEdit->text());
+        drawItem(ui->listWidget->item(ui->listWidget->currentRow()));
+        preview();
+    }
+}
+
+void MainWindow::on_pushButtonInsert_clicked()
+{
+    if(ui->lineEdit->text()!="" && ui->listWidget->currentRow()<ui->listWidget->count()-1){
+        ui->listWidget->insertItem(ui->listWidget->currentRow()+1,ui->lineEdit->text());
+        preview();
+    }
 }
 
 void MainWindow::on_pushButtonDelete_clicked()
 {
-    QListWidgetItem *item = ui->listWidget->takeItem(ui->listWidget->currentRow());
-    delete item;
-    preview();
+    if(ui->listWidget->count()>0){
+        QListWidgetItem *item = ui->listWidget->takeItem(ui->listWidget->currentRow());
+        delete item;
+        preview();
+    }
 }
 
 void MainWindow::preview()
@@ -115,8 +136,8 @@ void MainWindow::preview()
     for(int i=0;i<ui->listWidget->count();i++){
         s += ui->listWidget->item(i)->text() + "\n";
     }
-    qDebug() << s.toLatin1();
-    SVGW->load(s.toLatin1());
+    //qDebug() << s.toUtf8();
+    SVGW->load(s.toUtf8());
 }
 
 void MainWindow::on_action_new_triggered()
@@ -124,7 +145,7 @@ void MainWindow::on_action_new_triggered()
     ui->lineEdit->setText("");
     ui->listWidget->clear();
     QString s="";
-    SVGW->load(s.toLatin1());
+    SVGW->load(s.toUtf8());
     GS->clear();
 }
 
@@ -144,6 +165,7 @@ void MainWindow::on_action_save_triggered()
         }
         ts << s;
         file.close();
+        ui->statusBar->showMessage("保存 " + filename);
     }else{
         QMessageBox::critical(this,"错误", filename + file.errorString() );
     }
@@ -158,5 +180,30 @@ void MainWindow::on_action_saveas_triggered()
     }
     if(!filename.isEmpty()){
         on_action_save_triggered();
+    }
+}
+
+void MainWindow::on_actionReload_triggered()
+{
+    if(!filename.isEmpty()){
+        ui->label->setPixmap(QPixmap(filename));
+        QFile *file = new QFile(filename);
+        if(file->open(QIODevice::ReadOnly)){
+            QTextStream TS(file);
+            QString s = TS.readAll();
+            file->close();
+            ui->statusBar->showMessage("打开 " + filename);
+            lines = s.split("\n");
+            //for(int i=0;i<line.size();i++){
+            tagxml = lines.filter("<?xml").at(0);
+            //qDebug() << tagxml;
+            tagsvg = lines.filter("<svg").at(0);
+            //qDebug() << tagsvg;
+            ui->listWidget->clear();
+            ui->listWidget->addItems(lines);
+            //}
+        }else{
+            ui->statusBar->showMessage("打开 " + filename + file->errorString());
+        }
     }
 }

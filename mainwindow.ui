@@ -59,6 +59,52 @@
            <number>0</number>
           </property>
           <item>
+           <widget class="QPushButton" name="pushButtonMoveUp">
+            <property name="maximumSize">
+             <size>
+              <width>30</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="focusPolicy">
+             <enum>Qt::NoFocus</enum>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="res.qrc">
+              <normaloff>:/ArrowUp.png</normaloff>:/ArrowUp.png</iconset>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="pushButtonMoveDown">
+            <property name="maximumSize">
+             <size>
+              <width>30</width>
+              <height>16777215</height>
+             </size>
+            </property>
+            <property name="focusPolicy">
+             <enum>Qt::NoFocus</enum>
+            </property>
+            <property name="text">
+             <string/>
+            </property>
+            <property name="icon">
+             <iconset resource="res.qrc">
+              <normaloff>:/ArrowDown.png</normaloff>:/ArrowDown.png</iconset>
+            </property>
+            <property name="flat">
+             <bool>true</bool>
+            </property>
+           </widget>
+          </item>
+          <item>
            <widget class="QLineEdit" name="lineEdit"/>
           </item>
           <item>
@@ -91,12 +137,15 @@
            </widget>
           </item>
           <item>
-           <widget class="QPushButton" name="pushButtonAdd">
+           <widget class="QPushButton" name="pushButtonInsert">
             <property name="maximumSize">
              <size>
               <width>30</width>
               <height>16777215</height>
              </size>
+            </property>
+            <property name="focusPolicy">
+             <enum>Qt::NoFocus</enum>
             </property>
             <property name="text">
              <string/>
@@ -196,6 +245,7 @@
    <attribute name="toolBarBreak">
     <bool>false</bool>
    </attribute>
+   <addaction name="actionReload"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="action_open">
@@ -255,6 +305,11 @@
    </property>
    <property name="shortcut">
     <string>Ctrl+N</string>
+   </property>
+  </action>
+  <action name="actionReload">
+   <property name="text">
+    <string>reload</string>
    </property>
   </action>
  </widget>

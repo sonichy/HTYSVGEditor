@@ -33,7 +33,11 @@ private slots:
     void on_action_close_triggered();
     void on_action_quit_triggered();
     void on_action_about_triggered();
+    void on_actionReload_triggered();
+    void on_pushButtonMoveUp_clicked();
+    void on_pushButtonMoveDown_clicked();
     void on_pushButtonModify_clicked();
+    void on_pushButtonInsert_clicked();
     void on_pushButtonDelete_clicked();
     void drawItem(QListWidgetItem*);
     void preview();
