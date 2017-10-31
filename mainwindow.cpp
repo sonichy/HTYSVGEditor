@@ -40,7 +40,14 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->verticalLayout_SVG->addWidget(SVGW);
     ui->verticalLayout_SVG->addStretch();
     connect(ui->listWidget,SIGNAL(itemClicked(QListWidgetItem*)),this,SLOT(drawItem(QListWidgetItem*)));
-    connect(ui->lineEdit,SIGNAL(returnPressed()),this,SLOT(on_pushButtonModify_clicked()));    
+    connect(ui->lineEdit,SIGNAL(returnPressed()),this,SLOT(on_pushButtonModify_clicked()));
+
+    QStringList Largs = QApplication::arguments();
+    qDebug() << Largs;
+    if(Largs.length()>1){
+        filename = Largs.at(1);
+        on_actionReload_triggered();
+    }
 }
 
 MainWindow::~MainWindow()

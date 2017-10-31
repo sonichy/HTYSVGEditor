@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=海天鹰SVG编辑器
+Comment=
+Exec=/media/sonichy/job/HY/Linux/Qt/HTYSVGEditor/HTYSVGEditor
+Icon=/media/sonichy/job/HY/Linux/Qt/HTYSVGEditor/icon.png
+Path=/media/sonichy/job/HY/Linux/Qt/HTYSVGEditor
+Terminal=false
+Type=Application
+MimeType=image/svg;
+Categories=Graphics;
