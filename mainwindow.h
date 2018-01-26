@@ -24,6 +24,8 @@ private:
     QString filename,tagxml,tagsvg;
     QStringList lines;
     QSvgWidget *SVGW;
+    void dragEnterEvent(QDragEnterEvent*);
+    void dropEvent(QDropEvent*);
 
 private slots:
     void on_action_new_triggered();

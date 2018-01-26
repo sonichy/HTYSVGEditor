@@ -8,6 +8,8 @@
 #include <QFileDialog>
 #include <QTextStream>
 #include <QDebug>
+#include <QDragEnterEvent>
+#include <QMimeData>
 
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
@@ -62,7 +64,7 @@ void MainWindow::on_action_quit_triggered()
 
 void MainWindow::on_action_about_triggered()
 {
-    QMessageBox MBHelp(QMessageBox::NoIcon,"关于","海天鹰SVG编辑器 1.0\n\nLinux 平台基于 Qt 的最简单的 SVG 分行查看、编辑、保存程序。\n作者：黄颖\n邮箱：sonichy@163.com\n主页：sonichy.96.lt");
+    QMessageBox MBHelp(QMessageBox::NoIcon,"关于","海天鹰SVG编辑器 1.1\n\nLinux 平台基于 Qt 的最简单的 SVG 分行查看、编辑、保存程序。\n作者：黄颖\n邮箱：sonichy@163.com\n主页：http://sonichy.gitee.io");
     MBHelp.setWindowIcon(QIcon(":/icon.png"));
     MBHelp.setIconPixmap(QPixmap(":/icon.png"));
     MBHelp.exec();
@@ -201,10 +203,11 @@ void MainWindow::on_actionReload_triggered()
             file->close();
             ui->statusBar->showMessage("打开 " + filename);
             lines = s.split("\n");
-            //for(int i=0;i<line.size();i++){
-            tagxml = lines.filter("<?xml").at(0);
+            if(lines.filter("<?xml").count()>0)
+                tagxml = lines.filter("<?xml").at(0);
             //qDebug() << tagxml;
-            tagsvg = lines.filter("<svg").at(0);
+            if(lines.filter("<svg").count()>0)
+                tagsvg = lines.filter("<svg").at(0);
             //qDebug() << tagsvg;
             ui->listWidget->clear();
             ui->listWidget->addItems(lines);
@@ -213,4 +216,31 @@ void MainWindow::on_actionReload_triggered()
             ui->statusBar->showMessage("打开 " + filename + file->errorString());
         }
     }
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent *e)
+{
+    qDebug() << e->mimeData()->formats();
+    //if(e->mimeData()->hasFormat("text/uri-list")) //只能打开文本文件
+        e->acceptProposedAction(); //可以在这个窗口部件上拖放对象
+}
+
+void MainWindow::dropEvent(QDropEvent *e) //释放对方时，执行的操作
+{
+    QList<QUrl> urls = e->mimeData()->urls();
+    if(urls.isEmpty())
+        return;
+
+    QString fileName = urls.first().toLocalFile();
+
+    foreach (QUrl u, urls) {
+        qDebug() << u.toString();
+    }
+    qDebug() << urls.size();
+
+    if(fileName.isEmpty())
+        return;
+
+    filename = fileName;
+    on_actionReload_triggered();
 }
