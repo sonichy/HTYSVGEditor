@@ -242,6 +242,9 @@
    <addaction name="menu_2"/>
   </widget>
   <widget class="QToolBar" name="mainToolBar">
+   <property name="movable">
+    <bool>false</bool>
+   </property>
    <attribute name="toolBarArea">
     <enum>TopToolBarArea</enum>
    </attribute>
@@ -249,6 +252,14 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionReload"/>
+   <addaction name="actionLine"/>
+   <addaction name="actionRect"/>
+   <addaction name="actionCircle"/>
+   <addaction name="actionEllipse"/>
+   <addaction name="actionPolyline"/>
+   <addaction name="actionPolygon"/>
+   <addaction name="actionPath"/>
+   <addaction name="actionText"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="action_open">
@@ -313,6 +324,84 @@
   <action name="actionReload">
    <property name="text">
     <string>reload</string>
+   </property>
+  </action>
+  <action name="actionLine">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/line.svg</normaloff>:/line.svg</iconset>
+   </property>
+   <property name="text">
+    <string>line</string>
+   </property>
+   <property name="toolTip">
+    <string>直线</string>
+   </property>
+  </action>
+  <action name="actionRect">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/rect.svg</normaloff>:/rect.svg</iconset>
+   </property>
+   <property name="text">
+    <string>rect</string>
+   </property>
+   <property name="toolTip">
+    <string>矩形</string>
+   </property>
+  </action>
+  <action name="actionCircle">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/circle.svg</normaloff>:/circle.svg</iconset>
+   </property>
+   <property name="text">
+    <string>circle</string>
+   </property>
+  </action>
+  <action name="actionEllipse">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/ellipse.svg</normaloff>:/ellipse.svg</iconset>
+   </property>
+   <property name="text">
+    <string>ellipse</string>
+   </property>
+  </action>
+  <action name="actionPolygon">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/polygon.svg</normaloff>:/polygon.svg</iconset>
+   </property>
+   <property name="text">
+    <string>polygon</string>
+   </property>
+  </action>
+  <action name="actionPolyline">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/polyline.svg</normaloff>:/polyline.svg</iconset>
+   </property>
+   <property name="text">
+    <string>polyline</string>
+   </property>
+  </action>
+  <action name="actionPath">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/path.svg</normaloff>:/path.svg</iconset>
+   </property>
+   <property name="text">
+    <string>path</string>
+   </property>
+  </action>
+  <action name="actionText">
+   <property name="icon">
+    <iconset resource="res.qrc">
+     <normaloff>:/text.svg</normaloff>:/text.svg</iconset>
+   </property>
+   <property name="text">
+    <string>text</string>
    </property>
   </action>
  </widget>

@@ -36,6 +36,14 @@ private slots:
     void on_action_quit_triggered();
     void on_action_about_triggered();
     void on_actionReload_triggered();
+    void on_actionLine_triggered();
+    void on_actionRect_triggered();
+    void on_actionCircle_triggered();
+    void on_actionEllipse_triggered();
+    void on_actionPolygon_triggered();
+    void on_actionPolyline_triggered();
+    void on_actionPath_triggered();
+    void on_actionText_triggered();
     void on_pushButtonMoveUp_clicked();
     void on_pushButtonMoveDown_clicked();
     void on_pushButtonModify_clicked();

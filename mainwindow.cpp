@@ -126,6 +126,7 @@ void MainWindow::on_pushButtonInsert_clicked()
 {
     if(ui->lineEdit->text()!="" && ui->listWidget->currentRow()<ui->listWidget->count()-1){
         ui->listWidget->insertItem(ui->listWidget->currentRow()+1,ui->lineEdit->text());
+        ui->listWidget->setCurrentRow(ui->listWidget->currentRow()+1);
         preview();
     }
 }
@@ -243,4 +244,52 @@ void MainWindow::dropEvent(QDropEvent *e) //释放对方时，执行的操作
 
     filename = fileName;
     on_actionReload_triggered();
+}
+
+void MainWindow::on_actionLine_triggered()
+{
+    ui->lineEdit->setText("<line x1=\"3\" y1=\"3\" x2=\"30\" y2=\"30\" stroke=\"rgb(0,0,0)\" stroke-width=\"1\" />");
+    on_pushButtonInsert_clicked();
+}
+
+void MainWindow::on_actionRect_triggered()
+{
+    ui->lineEdit->setText("<rect x=\"3\" y=\"6\" width=\"26\" height=\"20\" fill=\"transparent\" stroke-width=\"1\" stroke=\"rgb(0,0,0)\"/>");
+    on_pushButtonInsert_clicked();
+}
+
+void MainWindow::on_actionCircle_triggered()
+{
+    ui->lineEdit->setText("<circle cx=\"16\" cy=\"16\" r=\"13\" stroke=\"black\" stroke-width=\"1\" fill=\"red\" />");
+    on_pushButtonInsert_clicked();
+}
+
+void MainWindow::on_actionEllipse_triggered()
+{
+    ui->lineEdit->setText("<ellipse cx=\"16\" cy=\"16\" rx=\"14\" ry=\"8\" fill=\"rgb(200,100,50)\" stroke=\"rgb(0,0,100)\" stroke-width=\"1\" />");
+    on_pushButtonInsert_clicked();
+}
+
+void MainWindow::on_actionPolygon_triggered()
+{
+    ui->lineEdit->setText("<polygon points=\"16,6 6,21 26,26\" fill=\"#cccccc\" stroke=\"#000000\" stroke-width=\"1\" />");
+    on_pushButtonInsert_clicked();
+}
+
+void MainWindow::on_actionPolyline_triggered()
+{
+    ui->lineEdit->setText("<polyline points=\"5,3 5,10 15,10 15,20 25,20 25,30\" fill=\"white\" stroke=\"red\" stroke-width=\"1\" />");
+    on_pushButtonInsert_clicked();
+}
+
+void MainWindow::on_actionPath_triggered()
+{
+    ui->lineEdit->setText("<path d=\"M10 5 L5 30 C30 20 30 15 15 5\" fill=\"none\" stroke=\"red\" stroke-width=\"1\" />");
+    on_pushButtonInsert_clicked();
+}
+
+void MainWindow::on_actionText_triggered()
+{
+    ui->lineEdit->setText("<text x=\"4\" y=\"27\" fill=\"red\" font-size=\"34\">A</text>");
+    on_pushButtonInsert_clicked();
 }

@@ -4,5 +4,13 @@
         <file>delete.png</file>
         <file>save.png</file>
         <file>add.png</file>
+        <file>line.svg</file>
+        <file>rect.svg</file>
+        <file>circle.svg</file>
+        <file>ellipse.svg</file>
+        <file>polygon.svg</file>
+        <file>polyline.svg</file>
+        <file>path.svg</file>
+        <file>text.svg</file>
     </qresource>
 </RCC>
